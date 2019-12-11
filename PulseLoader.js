@@ -9,7 +9,10 @@ const LocationPulseLoader = (props) => {
 	const[counter, setCounter] = useState(1);
 	const  [circles, setCircles] = useState([]);
 	const [anim] = useState(new Animated.Value(1));
-	useInterval(addCircle, interval);
+	console.log('circles', circles)
+	useInterval(() => {
+		addCircle()
+	}, interval);
 	useEffect(() => {
 		setCircleInterval();
 	}, [])
@@ -41,7 +44,6 @@ const LocationPulseLoader = (props) => {
 	return (
 		<View style={{
 			flex: 1,
-			backgroundColor: 'transparent',
 			justifyContent: 'center',
 			alignItems: 'center',
 		}}>
@@ -51,7 +53,6 @@ const LocationPulseLoader = (props) => {
 					{...props}
 				/>
 			))}
-
 			<TouchableOpacity
 				activeOpacity={1}
 				onPressIn={onPressIn}

@@ -21,8 +21,6 @@ const  Pulse = (props) => {
 		<View style={[styles.circleWrapper, {
 			width: pulseMaxSize,
 			height: pulseMaxSize,
-			marginLeft: -pulseMaxSize/2,
-			marginTop: -pulseMaxSize/2,
 		}]}>
 			<Animated.View
 				style={[styles.circle, {
@@ -54,9 +52,8 @@ const styles = StyleSheet.create({
 	circleWrapper: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		position: 'absolute',
-		left: width/2,
-		top: height/2,
+		backgroundColor:'transparent',
+		position: 'absolute'
 	},
 	circle: {
 		borderWidth: 4 * StyleSheet.hairlineWidth,
