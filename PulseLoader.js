@@ -1,104 +1,93 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { View, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import Pulse from './Pulse';
+import { useInterval } from './utils';
 
+const LocationPulseLoader = (props) => {
+	const {size, avatar, avatarBackgroundColor, interval} = props;
+	const[counter, setCounter] = useState(1);
+	const  [circles, setCircles] = useState([]);
+	const [anim] = useState(new Animated.Value(1));
 
-export default class LocationPulseLoader extends React.Component {
-	constructor(props) {
-		super(props);
-	
-		this.state = {
-			circles: []
-		};
-
-		this.counter = 1;
-		this.setInterval = null;
-		this.anim = new Animated.Value(1);
+	useInterval(addCircle, interval);
+	useEffect(() => {
+		setCircleInterval();
+	}, [])
+	const setCircleInterval = () => {
+		addCircle();
 	}
 
-	componentDidMount() {
-		this.setCircleInterval();
+	const addCircle = () => {
+		setCircles([...circles, counter])
+		setCounter(counter+1)
 	}
 
-	setCircleInterval() {
-		this.setInterval = setInterval(this.addCircle.bind(this), this.props.interval);
-		this.addCircle();
+	const onPressIn = () => {
+		Animated.timing(anim, {
+			toValue: props.pressInValue,
+			duration: props.pressDuration,
+			easing: props.pressInEasing,
+		}).start(() => clearInterval(setInterval));
 	}
 
-	addCircle() {
-		this.setState({ circles: [...this.state.circles, this.counter] });
-		this.counter++;
-	}
-
-	onPressIn() {
-		Animated.timing(this.anim, {
-			toValue: this.props.pressInValue,
-			duration: this.props.pressDuration,
-			easing: this.props.pressInEasing,
-		}).start(() => clearInterval(this.setInterval));
-	}
-
-	onPressOut() {
-		Animated.timing(this.anim, {
+	const onPressOut = () => {
+		Animated.timing(anim, {
 			toValue: 1,
-			duration: this.props.pressDuration,
-			easing: this.props.pressOutEasing,
-		}).start(this.setCircleInterval.bind(this));
+			duration: props.pressDuration,
+			easing: props.pressOutEasing,
+		}).start(setCircleInterval);
 	}
 
-	render() {
-		const { size, avatar, avatarBackgroundColor, interval } = this.props;
+	return (
+		<View style={{
+			flex: 1,
+			backgroundColor: 'transparent',
+			justifyContent: 'center',
+			alignItems: 'center',
+		}}>
+			{circles.map((circle) => (
+				<Pulse
+					key={circle}
+					{...props}
+				/>
+			))}
 
-		return (
-			<View style={{
-				flex: 1,
-				backgroundColor: 'transparent',
-				justifyContent: 'center',
-				alignItems: 'center',
-			}}>
-				{this.state.circles.map((circle) => (
-					<Pulse
-						key={circle}
-						{...this.props}
-					/>
-				))}
-
-				<TouchableOpacity
-					activeOpacity={1}
-					onPressIn={this.onPressIn.bind(this)}
-					onPressOut={this.onPressOut.bind(this)}
+			<TouchableOpacity
+				activeOpacity={1}
+				onPressIn={onPressIn}
+				onPressOut={onPressOut}
+				style={{
+					transform: [{
+						scale: anim
+					}]
+				}}
+			>
+				<Image
+					source={{ uri: avatar }}
 					style={{
-						transform: [{
-							scale: this.anim
-						}]
+						width: size,
+						height: size,
+						borderRadius: size/2,
+						backgroundColor: avatarBackgroundColor
 					}}
-				>
-					<Image
-						source={{ uri: avatar }}
-						style={{
-							width: size,
-							height: size,
-							borderRadius: size/2,
-							backgroundColor: avatarBackgroundColor
-						}}
-					/>
-				</TouchableOpacity>
-			</View>
-		);
-	}	
+				/>
+			</TouchableOpacity>
+		</View>
+	);
 }
 
 LocationPulseLoader.propTypes = {
-  interval: React.PropTypes.number,
-  size: React.PropTypes.number,
-  pulseMaxSize: React.PropTypes.number,
-  avatar: React.PropTypes.string.isRequired,
-  avatarBackgroundColor: React.PropTypes.string,
-  pressInValue: React.PropTypes.number,
-  pressDuration: React.PropTypes.number,
-  borderColor: React.PropTypes.string,
-  backgroundColor: React.PropTypes.string,
-  getStyle: React.PropTypes.func,
+  interval: PropTypes.number,
+  size: PropTypes.number,
+  pulseMaxSize: PropTypes.number,
+  avatar: PropTypes.string.isRequired,
+  avatarBackgroundColor: PropTypes.string,
+  pressInValue: PropTypes.number,
+  pressDuration: PropTypes.number,
+  borderColor: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  getStyle: PropTypes.func,
 };
 
 LocationPulseLoader.defaultProps = {
