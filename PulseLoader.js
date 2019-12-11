@@ -9,7 +9,6 @@ const LocationPulseLoader = (props) => {
 	const[counter, setCounter] = useState(1);
 	const  [circles, setCircles] = useState([]);
 	const [anim] = useState(new Animated.Value(1));
-
 	useInterval(addCircle, interval);
 	useEffect(() => {
 		setCircleInterval();
