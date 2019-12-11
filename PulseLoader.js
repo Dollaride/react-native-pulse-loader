@@ -104,3 +104,4 @@ LocationPulseLoader.defaultProps = {
   getStyle: undefined,
 };
 
+export default LocationPulseLoader;
