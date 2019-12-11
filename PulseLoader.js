@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import Pulse from './Pulse';
-import { useInterval } from './utils';
+import useInterval from '@use-it/interval';
 
 const LocationPulseLoader = (props) => {
 	const {size, avatar, avatarBackgroundColor, interval} = props;
