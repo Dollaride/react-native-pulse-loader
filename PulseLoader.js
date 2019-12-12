@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, TouchableOpacity, Animated, Easing } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Animated, Easing } from 'react-native';
 import Pulse from './Pulse';
 import useInterval from '@use-it/interval';
 
 const LocationPulseLoader = (props) => {
-	const {size, avatar, avatarBackgroundColor, interval} = props;
+	const {size, interval, icon, text, subText, textColor, backgroundColor} = props;
 	const[counter, setCounter] = useState(1);
 	const  [circles, setCircles] = useState([]);
 	const [anim] = useState(new Animated.Value(1));
-	console.log('circles', circles)
 	useInterval(() => {
 		addCircle()
 	}, interval);
@@ -63,15 +62,44 @@ const LocationPulseLoader = (props) => {
 					}]
 				}}
 			>
-				<Image
-					source={{ uri: avatar }}
-					style={{
-						width: size,
-						height: size,
-						borderRadius: size/2,
-						backgroundColor: avatarBackgroundColor
-					}}
-				/>
+				  <View style={{ alignItems: 'center',
+				  justifyContent: 'center',
+				backgroundColor,
+				borderRadius: size/2,
+				height:size,
+				width:size }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 0,
+                  paddingBottom: 0
+                }}
+              >
+                <Text
+                  style={{
+					   //   ...Style.fontBold,
+					backgroundColor: 'transparent',
+                    color: 'white',
+                    alignItems: 'center',
+                    fontSize: 20,
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {icon}
+                  {text}
+                </Text>
+              </View>
+              {subText?  <Text
+        style={{
+        //   ...Style.fontBold,
+          fontSize: 10,
+          color: textColor,
+          backgroundColor: 'transparent',
+          lineHeight: 10
+        }}
+      >{`${subText}`}</Text>: null}
+            </View>
 			</TouchableOpacity>
 		</View>
 	);
